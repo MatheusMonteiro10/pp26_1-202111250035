@@ -1,75 +1,49 @@
 package model;
 
-import mediator.Mediador;
+import prototype.Prototype;
 import service.MicrofoneCronometro;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PoliticoColaborador {
+public class PoliticoColaborador implements Prototype<PoliticoColaborador> {
 
     private final String nome;
-    private final Mediador mediador;
-    private final boolean sorteado;
+    private boolean sorteado;
     private final MicrofoneCronometro microfone;
-
     private final List<Observer> eleitores;
 
-    public PoliticoColaborador(String nome) {
-
-        this(
-                nome,
-                null,
-                false,
-                new MicrofoneCronometro()
-        );
-    }
-
+    // Package-private: uso exclusivo do PoliticoBuilder e do clonar()
     public PoliticoColaborador(
             String nome,
-            Mediador mediador,
             boolean sorteado,
-            MicrofoneCronometro microfone
+            MicrofoneCronometro microfone,
+            List<Observer> eleitores
     ) {
-
-        this.nome = nome;
-        this.mediador = mediador;
-        this.sorteado = sorteado;
+        this.nome      = nome;
+        this.sorteado  = sorteado;
         this.microfone = microfone;
-
-        this.eleitores = new ArrayList<>();
+        this.eleitores = new ArrayList<>(eleitores);
     }
 
-    public void adicionarEleitor(
-            Observer observer
-    ) {
+    public void adicionarEleitor(Observer observer) {
         eleitores.add(observer);
     }
 
-    public void removerEleitor(
-            Observer observer
-    ) {
+    public void removerEleitor(Observer observer) {
         eleitores.remove(observer);
     }
 
     private void notificarEleitores() {
-
-        String mensagem =
-                "Candidato " +
-                        nome +
-                        " está falando";
-
+        String mensagem = "Candidato " + nome + " está falando";
         for (Observer observer : eleitores) {
             observer.atualizar(mensagem);
         }
     }
 
     public void falar(int tempo) {
-
         notificarEleitores();
-
         microfone.ativar();
-
         try {
             microfone.esperarTempo(tempo);
         } finally {
@@ -77,19 +51,34 @@ public class PoliticoColaborador {
         }
     }
 
-    public String getNome() {
-        return nome;
+    @Override
+    public PoliticoColaborador clonar() {
+        List<Observer> eleitoresClonados = new ArrayList<>();
+        for (Observer observer : this.eleitores) {
+            if (observer instanceof Eleitor) {
+                eleitoresClonados.add(((Eleitor) observer).clonar());
+            } else {
+                eleitoresClonados.add(observer);
+            }
+        }
+        return new PoliticoColaborador(
+                this.nome,
+                this.sorteado,
+                this.microfone,
+                eleitoresClonados
+        );
     }
 
-    public Mediador getMediador() {
-        return mediador;
+    public String getNome() { return nome; }
+    public boolean getSorteado() { return sorteado; }
+    public MicrofoneCronometro getMicrofone() { return microfone; }
+
+    public void setSorteado(boolean sorteado) {
+        this.sorteado = sorteado;
     }
 
-    public boolean getSorteado() {
-        return sorteado;
-    }
-
-    public MicrofoneCronometro getMicrofone() {
-        return microfone;
+    // Retorna cópia da lista para evitar modificação externa
+    public List<Observer> getEleitores() {
+        return new ArrayList<>(eleitores);
     }
 }

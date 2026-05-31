@@ -1,6 +1,8 @@
 package model;
 
-public class Eleitor implements Observer {
+import prototype.Prototype;
+
+public class Eleitor implements Observer, Prototype<Eleitor> {
 
     private final String nome;
     private final String candidatoFavorito;
@@ -12,16 +14,18 @@ public class Eleitor implements Observer {
 
     @Override
     public void atualizar(String mensagem) {
-
         System.out.println(
-                "[NOTIFICAÇÃO] Eleitor: " +
-                        nome +
-                        " | " +
-                        mensagem
+                "[NOTIFICAÇÃO] Eleitor: " + nome +
+                        " | Favorito: " + candidatoFavorito +
+                        " | " + mensagem
         );
     }
 
-    public String getCandidatoFavorito() {
-        return candidatoFavorito;
+    @Override
+    public Eleitor clonar() {
+        return new Eleitor(this.nome, this.candidatoFavorito);
     }
+
+    public String getNome()              { return nome;             }
+    public String getCandidatoFavorito() { return candidatoFavorito; }
 }

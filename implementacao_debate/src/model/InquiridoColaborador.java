@@ -1,17 +1,13 @@
 package model;
 
-public class InquiridoColaborador
-        extends PoliticoColaborador {
+public class InquiridoColaborador extends PoliticoColaborador {
 
-    public InquiridoColaborador(
-            PoliticoColaborador politico
-    ) {
-
+    public InquiridoColaborador(PoliticoColaborador politico) {
         super(
                 politico.getNome(),
-                politico.getMediador(),
                 politico.getSorteado(),
-                politico.getMicrofone()
+                politico.getMicrofone(),
+                politico.getEleitores()
         );
     }
 }
