@@ -13,7 +13,6 @@ public class PoliticoColaborador implements Prototype<PoliticoColaborador> {
     private final MicrofoneCronometro microfone;
     private final List<Observer> eleitores;
 
-    // Package-private: uso exclusivo do PoliticoBuilder e do clonar()
     public PoliticoColaborador(
             String nome,
             boolean sorteado,
@@ -34,15 +33,14 @@ public class PoliticoColaborador implements Prototype<PoliticoColaborador> {
         eleitores.remove(observer);
     }
 
-    private void notificarEleitores() {
-        String mensagem = "Candidato " + nome + " está falando";
+    private void notificarEleitores(String mensagem) {
         for (Observer observer : eleitores) {
             observer.atualizar(mensagem);
         }
     }
 
     public void falar(int tempo) {
-        notificarEleitores();
+        notificarEleitores("Candidato " + nome + " está falando");
         microfone.ativar();
         try {
             microfone.esperarTempo(tempo);
@@ -67,6 +65,16 @@ public class PoliticoColaborador implements Prototype<PoliticoColaborador> {
                 this.microfone,
                 eleitoresClonados
         );
+    }
+
+    public void falarDR(int tempo) {
+        notificarEleitores("Candidato " + nome + " está exercendo seu Direito de Resposta");
+        microfone.ativar();
+        try {
+            microfone.esperarTempo(tempo);
+        } finally {
+            microfone.desativar();
+        }
     }
 
     public String getNome() { return nome; }

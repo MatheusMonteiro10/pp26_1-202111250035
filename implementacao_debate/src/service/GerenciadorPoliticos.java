@@ -3,7 +3,6 @@ package service;
 import builder.EleitorBuilder;
 import builder.PoliticoBuilder;
 import model.Eleitor;
-import model.Observer;
 import model.PoliticoColaborador;
 
 import java.util.ArrayList;
