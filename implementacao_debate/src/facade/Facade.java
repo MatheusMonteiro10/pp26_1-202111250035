@@ -84,4 +84,19 @@ public class Facade {
     public String getLogs() {
         return logger.getAllLogs();
     }
+
+    public void configurarDRListener() {
+        for (PoliticoColaborador p : gerenciadorPoliticos.listarPoliticos()) {
+            p.getMicrofone().setDRListener(mediadorDebate);
+        }
+        logger.registerLog("DRListener configurado em todos os microfones");
+    }
+
+    public void solicitarDR(String nomePolitico) {
+        PoliticoColaborador politico = gerenciadorPoliticos.obterPolitico(nomePolitico);
+        if (politico == null) {
+            throw new IllegalArgumentException("Político não encontrado: " + nomePolitico);
+        }
+        politico.acionarBotaoDR();
+    }
 }

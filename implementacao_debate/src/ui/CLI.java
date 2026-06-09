@@ -17,33 +17,22 @@ public class CLI implements UserInterface {
         facade.cadastrarPolitico("Carlos");
         facade.cadastrarPolitico("Marina");
 
-        facade.cadastrarEleitor(
-                "João",
-                "Ana"
-        );
+        facade.cadastrarEleitor("João",  "Ana");
+        facade.cadastrarEleitor("Maria", "Ana");
+        facade.cadastrarEleitor("Pedro", "Carlos");
 
-        facade.cadastrarEleitor(
-                "Maria",
-                "Ana"
-        );
+        facade.configuracao(3, 3, 2, 2);
 
-        facade.cadastrarEleitor(
-                "Pedro",
-                "Carlos"
-        );
-
-        facade.configuracao(
-                3,
-                3,
-                2,
-                2
-        );
+        // Injeta o MediadorDebate como DRListener em todos os microfones
+        facade.configurarDRListener();
 
         while (!facade.todosJaForamInquiridores()) {
 
             facade.sortearInquiridor();
-
             facade.escolherInquirido("Carlos");
+
+            facade.solicitarDR("Marina");
+            facade.solicitarDR("Ana");
 
             facade.iniciarDebate();
 

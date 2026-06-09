@@ -6,14 +6,13 @@ import service.MicrofoneCronometro;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PoliticoColaborador implements Prototype<PoliticoColaborador> {
+public class PoliticoColaborador implements Prototype<PoliticoColaborador>, Subject {
 
     private final String nome;
     private boolean sorteado;
     private final MicrofoneCronometro microfone;
     private final List<Observer> eleitores;
 
-    // Package-private: uso exclusivo do PoliticoBuilder e do clonar()
     public PoliticoColaborador(
             String nome,
             boolean sorteado,
@@ -26,15 +25,17 @@ public class PoliticoColaborador implements Prototype<PoliticoColaborador> {
         this.eleitores = new ArrayList<>(eleitores);
     }
 
+    @Override
     public void adicionarEleitor(Observer observer) {
         eleitores.add(observer);
     }
 
+    @Override
     public void removerEleitor(Observer observer) {
         eleitores.remove(observer);
     }
 
-    private void notificarEleitores() {
+    public void notificarEleitores() {
         String mensagem = "Candidato " + nome + " está falando";
         for (Observer observer : eleitores) {
             observer.atualizar(mensagem);
@@ -77,8 +78,28 @@ public class PoliticoColaborador implements Prototype<PoliticoColaborador> {
         this.sorteado = sorteado;
     }
 
-    // Retorna cópia da lista para evitar modificação externa
     public List<Observer> getEleitores() {
         return new ArrayList<>(eleitores);
+    }
+
+    public void acionarBotaoDR() {
+        microfone.acionarBotaoDR(this);
+    }
+
+    public void falarDR(int tempo) {
+        notificarEleitoresdDR();
+        microfone.ativar();
+        try {
+            microfone.esperarTempo(tempo);
+        } finally {
+            microfone.desativar();
+        }
+    }
+
+    private void notificarEleitoresdDR() {
+        String mensagem = "Candidato " + nome + " está exercendo Direito de Resposta";
+        for (Observer observer : eleitores) {
+            observer.atualizar(mensagem);
+        }
     }
 }

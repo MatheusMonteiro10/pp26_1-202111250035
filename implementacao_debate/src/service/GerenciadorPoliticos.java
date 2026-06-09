@@ -3,10 +3,10 @@ package service;
 import builder.EleitorBuilder;
 import builder.PoliticoBuilder;
 import model.Eleitor;
-import model.Observer;
 import model.PoliticoColaborador;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -72,5 +72,9 @@ public class GerenciadorPoliticos {
 
     public boolean todosJaForamSorteados() {
         return totalSorteados >= politicos.size();
+    }
+
+    public List<PoliticoColaborador> listarPoliticos() {
+        return Collections.unmodifiableList(politicos);
     }
 }
